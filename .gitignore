@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+venv/
+
+# CpkMaker
+cpkmaker.out.csv
+
+files/fonts/*.otf
+files/fonts/*.ttf
+
+# IDA
+*.idb
+*.id0
+*.id1
+*.nam
+*.til
+
+# Temporary files
+temp/
+unpacked/
+out/
+maintenance/

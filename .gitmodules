@@ -1,0 +1,6 @@
+[submodule "texts"]
+	path = texts
+	url = https://github.com/Xzonn/PCTRGen6Text.git
+[submodule "bin/PCTRGen6Tools"]
+	path = bin/PCTRGen6Tools
+	url = https://github.com/Xzonn/PCTRGen6Tools.git
