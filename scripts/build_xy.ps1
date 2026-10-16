@@ -22,6 +22,8 @@ python scripts/compile_exefs_patch.py XY
 
 & $tool "import" -p "original_files\japanese\XY" -r "temp\import\japanese\XY" -o "temp\output\japanese\XY"
 
+python scripts/build_patches.py XY
+
 if (Test-Path "$env:APPDATA\Citra\load\mods\0004000000055D00\romfs\") {
   Copy-Item -Path "temp\output\japanese\XY\*" -Destination "$env:APPDATA\Citra\load\mods\0004000000055D00\romfs\" -Force -Recurse
   Copy-Item -LiteralPath "temp\output\exefs\X\code.ips" -Destination "$env:APPDATA\Citra\load\mods\0004000000055D00\code.ips" -Force

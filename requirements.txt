@@ -4,4 +4,5 @@ openpyxl
 pypng
 pillow
 ips.py
+pyctr
 xzonn_mt_tools>=0.1.5

@@ -21,6 +21,8 @@ python scripts/compile_exefs_patch.py ORAS
 
 & $tool "import" -p "original_files\japanese\ORAS" -r "temp\import\japanese\ORAS" -o "temp\output\japanese\ORAS"
 
+python scripts/build_patches.py ORAS
+
 if (Test-Path "$env:APPDATA\Citra\load\mods\000400000011C400\romfs\") {
   Copy-Item -Path "temp\output\japanese\ORAS\*" -Destination "$env:APPDATA\Citra\load\mods\000400000011C400\romfs\" -Force -Recurse
   Copy-Item -LiteralPath "temp\output\exefs\OR\code.ips" -Destination "$env:APPDATA\Citra\load\mods\000400000011C400\code.ips" -Force
