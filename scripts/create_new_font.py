@@ -1,3 +1,4 @@
+import argparse
 import os
 import shutil
 
@@ -24,6 +25,7 @@ class IDrawConfg:
   n_cell_width: int
   n_cell_height: int
   n_baseline: int
+  n_offset_y = 1
 
   def __init__(self, char_table: dict[str, str] = {}):
     self.char_table: dict[str, str] = char_table
@@ -101,6 +103,7 @@ class DrawConfig1(IDrawConfg):
   n_cell_width = 25
   n_cell_height = 27
   n_baseline = 21
+  n_offset_y = 0
 
   def __init__(self, char_table: dict[str, str] = {}):
     super().__init__(char_table)
@@ -265,7 +268,7 @@ def create_new_font(
   n_cell_height = config.n_cell_height
 
   n_max_x = n_width // n_cell_width
-  n_max_y = n_height // n_cell_height
+  n_max_y = (n_height + 1 - config.n_offset_y) // n_cell_height
   n_max_xy = n_max_x * n_max_y
 
   n_char_map = dict(enumerate(n_char_codes))
@@ -290,7 +293,7 @@ def create_new_font(
     glyph = n_glyphs[code]
     n_images[n_sheet_i].paste(
       glyph.image,
-      (n_x * n_cell_width + 1 + glyph.left - n_width_info[code].start, n_y * n_cell_height + 1 + n_baseline - glyph.ascent),
+      (n_x * n_cell_width + 1 + glyph.left - n_width_info[code].start, n_y * n_cell_height + config.n_offset_y + n_baseline - glyph.ascent),
     )
 
   os.makedirs(high_res_dir, exist_ok=True)
@@ -303,9 +306,13 @@ def create_new_font(
       glyph = n_high_res_glyphs[code]
       image.paste(
         glyph.image,
-        ((x * n_cell_width + 1 - n_width_info[code].start) * 8 + glyph.left, (y * n_cell_height + 1 + n_baseline) * 8 - glyph.ascent),
+        ((x * n_cell_width + 1 - n_width_info[code].start) * 8 + glyph.left, (y * n_cell_height + config.n_offset_y + n_baseline) * 8 - glyph.ascent),
       )
     image.save(f"{high_res_dir}/{sheet_i:04d}.png")
+
+  for file_name in os.listdir(high_res_dir):
+    if len(file_name) == 8 and file_name[:4].isdigit() and file_name[4:] == ".png" and int(file_name[:4]) >= len(n_images):
+      os.remove(f"{high_res_dir}/{file_name}")
 
   font.tglp.image_data = [image_to_sheet(image, format) for image in n_images]
   font.tglp.image_count = len(n_images)
@@ -323,6 +330,9 @@ def create_new_font(
 
 
 if __name__ == "__main__":
+  parser = argparse.ArgumentParser()
+  parser.add_argument("game", nargs="?", choices=["XY", "ORAS", "ORAS_Demo"])
+  args = parser.parse_args()
   create_list = [
     (PATH_CHAR_TABLE_XY, PATH_GARC_FONT_XY),
     (PATH_CHAR_TABLE_ORAS, PATH_GARC_FONT_ORAS),
@@ -330,10 +340,15 @@ if __name__ == "__main__":
   ]
 
   for char_table_path, garc_font_path in create_list:
+    game = garc_font_path.split("/")[0]
+    if args.game and game != args.game:
+      continue
     with open(char_table_path, "r", -1, "utf8") as reader:
       char_table = {char: char for char in reader.read()}
 
     config = DrawConfig1(char_table)
+    if game == "ORAS_Demo":
+      config.n_offset_y = 1
     create_new_font(
       "0001.bin",
       f"unpacked/japanese/{garc_font_path}",

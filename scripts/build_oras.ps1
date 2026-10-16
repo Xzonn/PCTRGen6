@@ -8,6 +8,9 @@ if (-not (Test-Path "unpacked\japanese\ORAS\a\0\7\1")) {
   & $tool "export" -p "original_files\japanese\ORAS" -o "unpacked\japanese\ORAS"
 }
 
+python scripts/create_new_font.py ORAS
+python scripts/compile_exefs_patch.py ORAS
+
 & $tool "import-text" -p "unpacked\japanese\ORAS\a\0\7\1" -r "texts\ORAS\zh_Hans\gametext" -o "temp\import\japanese\ORAS\a\0\7\1"
 & $tool "import-text" -p "unpacked\japanese\ORAS\a\0\7\2" -r "texts\ORAS\zh_Hans\gametext" -o "temp\import\japanese\ORAS\a\0\7\2" -e "texts\ORAS\zh_Latn\gametext"
 & $tool "import-text" -p "unpacked\japanese\ORAS\a\0\7\3" -r "texts\ORAS\zh_Hans\gametext" -o "temp\import\japanese\ORAS\a\0\7\3" -e "texts\ORAS\zh_Hant\gametext"
@@ -20,7 +23,9 @@ if (-not (Test-Path "unpacked\japanese\ORAS\a\0\7\1")) {
 
 if (Test-Path "$env:APPDATA\Citra\load\mods\000400000011C400\romfs\") {
   Copy-Item -Path "temp\output\japanese\ORAS\*" -Destination "$env:APPDATA\Citra\load\mods\000400000011C400\romfs\" -Force -Recurse
+  Copy-Item -LiteralPath "temp\output\exefs\OR\code.ips" -Destination "$env:APPDATA\Citra\load\mods\000400000011C400\code.ips" -Force
 }
 if (Test-Path "$env:APPDATA\Citra\load\mods\000400000011C500\romfs\") {
   Copy-Item -Path "temp\output\japanese\ORAS\*" -Destination "$env:APPDATA\Citra\load\mods\000400000011C500\romfs\" -Force -Recurse
+  Copy-Item -LiteralPath "temp\output\exefs\AS\code.ips" -Destination "$env:APPDATA\Citra\load\mods\000400000011C500\code.ips" -Force
 }

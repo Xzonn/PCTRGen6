@@ -8,6 +8,9 @@ if (-not (Test-Path "unpacked\japanese\XY\a\0\7\2")) {
   & $tool "export" -p "original_files\japanese\XY" -o "unpacked\japanese\XY"
 }
 
+python scripts/create_new_font.py XY
+python scripts/compile_exefs_patch.py XY
+
 & $tool "import-text" -p "unpacked\japanese\XY\a\0\7\2" -r "texts\XY\zh_Hans\gametext" -o "temp\import\japanese\XY\a\0\7\2"
 & $tool "import-text" -p "unpacked\japanese\XY\a\0\7\3" -r "texts\XY\zh_Hans\gametext" -o "temp\import\japanese\XY\a\0\7\3" -e "texts\XY\zh_Latn\gametext"
 & $tool "import-text" -p "unpacked\japanese\XY\a\0\7\4" -r "texts\XY\zh_Hans\gametext" -o "temp\import\japanese\XY\a\0\7\4" -e "texts\XY\zh_Hant\gametext"
@@ -21,7 +24,9 @@ if (-not (Test-Path "unpacked\japanese\XY\a\0\7\2")) {
 
 if (Test-Path "$env:APPDATA\Citra\load\mods\0004000000055D00\romfs\") {
   Copy-Item -Path "temp\output\japanese\XY\*" -Destination "$env:APPDATA\Citra\load\mods\0004000000055D00\romfs\" -Force -Recurse
+  Copy-Item -LiteralPath "temp\output\exefs\X\code.ips" -Destination "$env:APPDATA\Citra\load\mods\0004000000055D00\code.ips" -Force
 }
 if (Test-Path "$env:APPDATA\Citra\load\mods\0004000000055E00\romfs\") {
   Copy-Item -Path "temp\output\japanese\XY\*" -Destination "$env:APPDATA\Citra\load\mods\0004000000055E00\romfs\" -Force -Recurse
+  Copy-Item -LiteralPath "temp\output\exefs\Y\code.ips" -Destination "$env:APPDATA\Citra\load\mods\0004000000055E00\code.ips" -Force
 }
