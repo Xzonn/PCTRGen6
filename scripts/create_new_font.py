@@ -310,9 +310,9 @@ def create_new_font(
       )
     image.save(f"{high_res_dir}/{sheet_i:04d}.png")
 
-  for file_name in os.listdir(high_res_dir):
-    if len(file_name) == 8 and file_name[:4].isdigit() and file_name[4:] == ".png" and int(file_name[:4]) >= len(n_images):
-      os.remove(f"{high_res_dir}/{file_name}")
+  for image_name in os.listdir(high_res_dir):
+    if len(image_name) == 8 and image_name[:4].isdigit() and image_name[4:] == ".png" and int(image_name[:4]) >= len(n_images):
+      os.remove(f"{high_res_dir}/{image_name}")
 
   font.tglp.image_data = [image_to_sheet(image, format) for image in n_images]
   font.tglp.image_count = len(n_images)
