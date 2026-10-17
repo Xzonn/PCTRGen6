@@ -3,6 +3,7 @@ import os
 import shutil
 
 from bcfnt import BCFNT, CWDHInfo
+from cityhash import CityHash64
 from font_helper import image_to_sheet, sheet_to_image
 from helper import (
   CHINESE_PUNCTUATIONS_CENTER,
@@ -296,6 +297,8 @@ def create_new_font(
       (n_x * n_cell_width + 1 + glyph.left - n_width_info[code].start, n_y * n_cell_height + config.n_offset_y + n_baseline - glyph.ascent),
     )
 
+  font.tglp.image_data = [image_to_sheet(image, format) for image in n_images]
+  high_res_names = []
   os.makedirs(high_res_dir, exist_ok=True)
   for sheet_i in range(len(n_images)):
     image = Image.new("RGBA", (n_width * 8, n_height * 8))
@@ -308,13 +311,19 @@ def create_new_font(
         glyph.image,
         ((x * n_cell_width + 1 - n_width_info[code].start) * 8 + glyph.left, (y * n_cell_height + config.n_offset_y + n_baseline) * 8 - glyph.ascent),
       )
-    image.save(f"{high_res_dir}/{sheet_i:04d}.png")
+    texture = sheet_to_image(font.tglp.image_data[sheet_i], n_width, n_height, format)
+    texture_hash = CityHash64(texture.transpose(Image.Transpose.FLIP_TOP_BOTTOM).tobytes())
+    image_name = f"tex1_{n_width}x{n_height}_{texture_hash:016X}_{format}_mip0.png"
+    image.save(f"{high_res_dir}/{image_name}")
+    high_res_names.append(image_name)
 
   for image_name in os.listdir(high_res_dir):
-    if len(image_name) == 8 and image_name[:4].isdigit() and image_name[4:] == ".png" and int(image_name[:4]) >= len(n_images):
+    if image_name not in high_res_names and (
+      (len(image_name) == 8 and image_name[:4].isdigit() and image_name[4:] == ".png")
+      or (image_name.startswith("tex1_") and image_name.endswith(".png"))
+    ):
       os.remove(f"{high_res_dir}/{image_name}")
 
-  font.tglp.image_data = [image_to_sheet(image, format) for image in n_images]
   font.tglp.image_count = len(n_images)
   font.tglp.image_width = n_width
   font.tglp.image_height = n_height

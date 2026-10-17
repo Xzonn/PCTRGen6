@@ -1,4 +1,5 @@
 cn2an
+cityhash
 fontTools
 openpyxl
 pypng
