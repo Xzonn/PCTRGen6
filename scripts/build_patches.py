@@ -16,6 +16,12 @@ TITLES = {
 def read_metadata(title: str, work: str):
   with open(f"{work}/title.tmd", "rb") as reader:
     tmd = TitleMetadataReader.load(reader)
+  tmd.title_version = tmd.title_version._replace(major=tmd.title_version.major + 1)
+  with open(f"{work}/title.tmd", "wb") as writer:
+    writer.write(bytes(tmd))
+  with open(f"{work}/exheader.bin", "r+b") as writer:
+    writer.seek(0x0E)
+    writer.write(tmd.title_version.major.to_bytes(2, "little"))
   content = tmd.chunk_records[0]
   return {
     "title_id": tmd.title_id.upper(),
