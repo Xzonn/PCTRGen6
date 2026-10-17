@@ -4,3 +4,6 @@
 [submodule "bin/PCTRGen6Tools"]
 	path = bin/PCTRGen6Tools
 	url = https://github.com/Xzonn/PCTRGen6Tools.git
+[submodule "bin/3DS-Decomp-Pipeline"]
+	path = bin/3DS-Decomp-Pipeline
+	url = https://github.com/AlgebraManiacABC/3DS-Decomp-Pipeline.git

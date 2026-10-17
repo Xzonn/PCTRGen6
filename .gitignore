@@ -20,3 +20,5 @@ temp/
 unpacked/
 out/
 maintenance/
+
+*.psd

@@ -35,6 +35,7 @@ foreach ($game in $games) {
 
   python scripts/create_new_font.py $game
   python scripts/compile_exefs_patch.py $game
+  python scripts/compile_pinyin_patch.py $game
 
   & $tool "import-text" -p "unpacked\japanese\$game\$($settings.gametext[0])" -r "texts\$game\zh_Hans\gametext" -o "temp\import\japanese\$game\$($settings.gametext[0])"
   & $tool "import-text" -p "unpacked\japanese\$game\$($settings.gametext[1])" -r "texts\$game\zh_Hans\gametext" -o "temp\import\japanese\$game\$($settings.gametext[1])" -e "texts\$game\zh_Latn\gametext"
@@ -70,6 +71,7 @@ foreach ($game in $games) {
     $luma = "out\luma\titles\$($metadata.base_title_id)"
     New-Item -ItemType Directory -Path "$luma\romfs" -Force | Out-Null
     Copy-Item -Path "temp\output\japanese\$game\*" -Destination "$luma\romfs" -Recurse -Force
+    Copy-Item -Path "temp\output\romfs\$title\*" -Destination "$luma\romfs" -Recurse -Force
     Copy-Item -LiteralPath "temp\output\exefs\$title\code.ips" -Destination "$luma\code.ips" -Force
     Copy-Item -Path "$luma\romfs\*" -Destination "$work\romfs" -Recurse -Force
 
@@ -84,6 +86,7 @@ foreach ($game in $games) {
     $citra = "$env:APPDATA\Citra\load\mods\$($metadata.base_title_id)"
     if (Test-Path "$citra\romfs\") {
       Copy-Item -Path "temp\output\japanese\$game\*" -Destination "$citra\romfs\" -Force -Recurse
+      Copy-Item -Path "temp\output\romfs\$title\*" -Destination "$citra\romfs\" -Force -Recurse
       Copy-Item -LiteralPath "temp\output\exefs\$title\code.ips" -Destination "$citra\code.ips" -Force
     }
   }

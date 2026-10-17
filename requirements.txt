@@ -6,4 +6,6 @@ pypng
 pillow
 ips.py
 pyctr
+pyelftools
+typing_extensions
 xzonn_mt_tools>=0.1.5
